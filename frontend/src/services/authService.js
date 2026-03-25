@@ -6,7 +6,7 @@ const AuthService = {
   getCurrentUser: () => api.get('/auth/me'),
   logout: () => localStorage.removeItem('token'),
 
-  // 🔹 Nuevo método para restear contraseña 
+  //  Nuevo método para restear contraseña 
   resetPassword: (registroAcademico, correo, nuevaPassword) =>
     api.post('/auth/reset-password', { registroAcademico, correo, nuevaPassword })
 };

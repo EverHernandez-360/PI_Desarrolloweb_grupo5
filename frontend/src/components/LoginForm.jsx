@@ -69,7 +69,7 @@ const LoginForm = ({ onLoginSuccess }) => {
           ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
         </p>
 
-        {/* 🔹 Nuevo enlace para recuperar contraseña */}
+        {/*  Nuevo enlace para recuperar contraseña */}
         <p className="forgot-link">
           ¿Olvidaste tu contraseña? <a href="/forgot-password">Recupérala aquí</a>
         </p>
