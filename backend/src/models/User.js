@@ -1,6 +1,5 @@
 const pool = require('../config/database');
 
-// Estructura de respuesta estándar
 class UserModel {
   static async create(userData) {
     const { registro_academico, nombres, apellidos, email, password_hash } = userData;
@@ -10,23 +9,25 @@ class UserModel {
       VALUES (?, ?, ?, ?, ?, NOW())
     `;
 
-    try {
-      const [result] = await pool.execute(query, [
-        registro_academico,
-        nombres,
-        apellidos,
-        email,
-        password_hash
-      ]);
-      return { id: result.insertId, ...userData };
-    } catch (error) {
-      throw error;
-    }
+    const [result] = await pool.execute(query, [
+      registro_academico,
+      nombres,
+      apellidos,
+      email,
+      password_hash
+    ]);
+    return { id: result.insertId, ...userData };
   }
 
   static async findByEmail(email) {
     const query = 'SELECT * FROM usuarios WHERE email = ?';
     const [rows] = await pool.execute(query, [email]);
+    return rows[0] || null;
+  }
+
+  static async findByRegistroAcademico(registro) {
+    const query = 'SELECT id, registro_academico, nombres, apellidos, email, fecha_creacion FROM usuarios WHERE registro_academico = ?';
+    const [rows] = await pool.execute(query, [registro]);
     return rows[0] || null;
   }
 
@@ -46,6 +47,20 @@ class UserModel {
     const query = `UPDATE usuarios SET ${updates} WHERE id = ?`;
     
     await pool.execute(query, [...values, id]);
+    return this.findById(id);
+  }
+
+  //  Nuevo: buscar por registro académico y email
+  static async findByRegistroAndEmail(registro_academico, email) {
+    const query = 'SELECT * FROM usuarios WHERE registro_academico = ? AND email = ?';
+    const [rows] = await pool.execute(query, [registro_academico, email]);
+    return rows[0] || null;
+  }
+
+  // Nuevo: actualizar contraseña
+  static async updatePassword(id, password_hash) {
+    const query = 'UPDATE usuarios SET password_hash = ? WHERE id = ?';
+    await pool.execute(query, [password_hash, id]);
     return this.findById(id);
   }
 }
