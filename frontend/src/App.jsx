@@ -7,6 +7,7 @@ import CreatePublication from './components/CreatePublication';
 import PublicationDetail from './components/PublicationDetail';
 import UserProfile from './components/UserProfile';
 import SearchBar from './components/SearchBar';
+import ForgotPasswordForm from './components/ForgotPasswordForm'; // nuevo import para olvido de su contraseña
 
 function App() {
   const [user, setUser] = useState(null);
@@ -70,6 +71,7 @@ function App() {
               <>
                 <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
                 <Route path="/register" element={<RegisterForm onRegisterSuccess={handleRegisterSuccess} />} />
+                <Route path="/forgot-password" element={<ForgotPasswordForm />} /> {/* 🔹 nueva ruta */}
                 <Route path="*" element={<Navigate to="/login" />} />
               </>
             ) : (
