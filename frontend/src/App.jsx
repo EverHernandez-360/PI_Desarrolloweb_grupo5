@@ -5,6 +5,8 @@ import RegisterForm from './components/RegisterForm';
 import PublicationList from './components/PublicationList';
 import CreatePublication from './components/CreatePublication';
 import PublicationDetail from './components/PublicationDetail';
+import UserProfile from './components/UserProfile';
+import SearchBar from './components/SearchBar';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -48,6 +50,7 @@ function App() {
             <div className="nav-links">
               {user ? (
                 <>
+                  <SearchBar />
                   <span className="user-info">
                     Bienvenido, {user.nombres}
                   </span>
@@ -74,6 +77,7 @@ function App() {
                 <Route path="/" element={<PublicationList />} />
                 <Route path="/create" element={<CreatePublication onPublicationCreated={() => window.location.href = '/'} />} />
                 <Route path="/publication/:id" element={<PublicationDetail />} />
+                <Route path="/profile/:registro" element={<UserProfile />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </>
             )}
