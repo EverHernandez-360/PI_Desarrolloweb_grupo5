@@ -7,21 +7,17 @@ class AuthController {
     try {
       const { registro_academico, nombres, apellidos, email, password } = req.body;
 
-      // Validaciones básicas
       if (!registro_academico || !nombres || !apellidos || !email || !password) {
         return res.status(400).json({ error: 'Todos los campos son requeridos' });
       }
 
-      // Verificar si el usuario ya existe
       const existingUser = await UserModel.findByEmail(email);
       if (existingUser) {
         return res.status(400).json({ error: 'El email ya está registrado' });
       }
 
-      // Encriptar contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Crear usuario
       const user = await UserModel.create({
         registro_academico,
         nombres,
@@ -57,13 +53,11 @@ class AuthController {
         return res.status(400).json({ error: 'Email o contraseña incorrectos' });
       }
 
-      // Verificar contraseña
       const validPassword = await bcrypt.compare(password, user.password_hash);
       if (!validPassword) {
         return res.status(400).json({ error: 'Email o contraseña incorrectos' });
       }
 
-      // Generar token
       const token = generateToken(user.id);
 
       res.json({
@@ -93,6 +87,30 @@ class AuthController {
       res.json(user);
     } catch (error) {
       res.status(500).json({ error: 'Error al obtener usuario actual' });
+    }
+  }
+
+  //  Nuevo método para resetear contraseña
+  static async resetPassword(req, res) {
+    try {
+      const { registro_academico, email, nuevaPassword } = req.body;
+
+      if (!registro_academico || !email || !nuevaPassword) {
+        return res.status(400).json({ error: 'Todos los campos son requeridos' });
+      }
+
+      const user = await UserModel.findByRegistroAndEmail(registro_academico, email);
+      if (!user) {
+        return res.status(400).json({ error: 'Datos incorrectos' });
+      }
+
+      const hashedPassword = await bcrypt.hash(nuevaPassword, 10);
+      await UserModel.updatePassword(user.id, hashedPassword);
+
+      res.json({ message: 'Contraseña actualizada correctamente' });
+    } catch (error) {
+      console.error('Error en resetPassword:', error);
+      res.status(500).json({ error: 'Error al reestablecer contraseña' });
     }
   }
 }
