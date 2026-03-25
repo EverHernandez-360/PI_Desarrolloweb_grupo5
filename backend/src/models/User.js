@@ -25,6 +25,12 @@ class UserModel {
     return rows[0] || null;
   }
 
+  static async findByRegistroAcademico(registro) {
+    const query = 'SELECT id, registro_academico, nombres, apellidos, email, fecha_creacion FROM usuarios WHERE registro_academico = ?';
+    const [rows] = await pool.execute(query, [registro]);
+    return rows[0] || null;
+  }
+
   static async findById(id) {
     const query = 'SELECT id, registro_academico, nombres, apellidos, email, fecha_creacion FROM usuarios WHERE id = ?';
     const [rows] = await pool.execute(query, [id]);
